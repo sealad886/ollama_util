@@ -1,3 +1,4 @@
+python-dotenv
 argparse==1.4.0
 ollama==0.1.8
 prettytable==3.10.0

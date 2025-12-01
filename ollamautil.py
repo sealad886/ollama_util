@@ -32,6 +32,8 @@ import json
 import ast
 import argparse
 import hashlib
+
+from dotenv import load_dotenv
 from prettytable import PrettyTable
 from tqdm import tqdm as tqdm
 from typing import List, Tuple
@@ -390,6 +392,8 @@ def copy_models_cache_to_cache(models: List[Model]):
         if not overwrite:
             # Remove the existing files from the list of files to copy
             files_to_copy = [f for f in files_to_copy if f not in existing_files]
+    else:
+        overwrite = False
 
     if not files_to_copy:
         print("No files to copy. Exiting copy operation.")
@@ -746,11 +750,14 @@ if __name__ == "__main__":
                                      "external caches, respectively.]]")
     # define the default source directories (no training delimiter)
     # points to path of internal "modules" directory
+    load_dotenv()
     global ollama_int_dir
     ollama_int_dir = os.getenv("OLLAMAUTIL_INTERNAL_DIR")
     # points to path of external "modules" directory
     global ollama_ext_dir
     ollama_ext_dir = os.getenv("OLLAMAUTIL_EXTERNAL_DIR")
+    if ollama_int_dir is None or ollama_ext_dir is None:
+        raise Exception("Ollamautil internal and external directories not set.")
     global valid_caches
     valid_caches = [
         ('internal', ollama_int_dir),

@@ -4,6 +4,7 @@ from .utils import ftStr
 from .ollamautil import build_ext_int_comb_filelist, display_models_table, migrate_cache_user, toggle_int_ext_cache, remove_from_cache, pull_models, push_models
 import os
 import ast
+from dotenv import load_dotenv
 
 def main_menu():
     print("\n\033[1mMain Menu\033[0m")
@@ -39,12 +40,15 @@ def process_choice(choice: str, combined, models_table: PrettyTable|None = None)
         print("Invalid choice, please try again.")
 
 def main() -> None:
-    '''
+    """
     Display main menu and basic high-level handling.
-    '''
+    """
     # Set up environment variables
+    load_dotenv()
     ollama_int_dir = os.getenv("OLLAMAUTIL_INTERNAL_DIR")
     ollama_ext_dir = os.getenv("OLLAMAUTIL_EXTERNAL_DIR")
+    if ollama_int_dir is None or ollama_ext_dir is None:
+        raise Exception("Ollamautil internal and external directories not set.")
     try:
         ollama_file_ignore = ast.literal_eval(os.getenv("OLLAMAUTIL_FILE_IGNORE", "['.DS_Store']"))
     except:
